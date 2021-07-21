@@ -17,6 +17,15 @@ function findCombinationScore(hand = []) {
   return 0;
 }
 
+function testForThreeOfAKind(hand = []) {
+  const cardValues = hand.map((card) => card.substring(0, 1));
+  let result = false;
+  cardValues.forEach((testValue) => {
+    if (cardValues.filter((cardValue) => testValue === cardValue).length === 3)
+      result = true;
+  });
+  return result;
+}
 function testForStraight(hand = []) {
   const values = hand.map((card) => card.substring(0, 1));
   values.sort((a, b) => (cardsInOrder[a] > cardsInOrder[b] ? 1 : -1));
