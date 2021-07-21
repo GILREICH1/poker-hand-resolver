@@ -31,7 +31,7 @@ function testForPairs(hand = []) {
   return numberOfPairsTimesTwo / 2;
 }
 function testForThreeOfAKind(hand = []) {
-  const cardValues = hand.map((card) => card.substring(0, 1));
+  const cardValues = extractValues(hand);
   let result = false;
   cardValues.forEach((testValue) => {
     if (cardValues.filter((cardValue) => testValue === cardValue).length === 3)
@@ -40,7 +40,7 @@ function testForThreeOfAKind(hand = []) {
   return result;
 }
 function testForStraight(hand = []) {
-  const values = hand.map((card) => card.substring(0, 1));
+  const values = extractValues(hand);
   values.sort((a, b) => (cardsInOrder[a] > cardsInOrder[b] ? 1 : -1));
   for (let i = 0; i < values.length - 1; i++) {
     const currentCard = values[i];
@@ -52,6 +52,8 @@ function testForStraight(hand = []) {
 
 TestForStraight() {
 
+function extractValues(hand) {
+  return hand.map((card) => card.substring(0, 1));
 }
 
 const Result = {
