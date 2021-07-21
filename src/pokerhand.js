@@ -14,6 +14,7 @@ class PokerHand {
 
 function findCombinationScore(hand = []) {
   const numberOfPairs = testForPairs(hand);
+  if (testForFlush(hand)) return combinationScores.flush;
   if (testForFourOfAKind(hand)) return combinationScores.fourOfAKind;
   if (testForStraight(hand)) return combinationScores.straight;
   if (numberOfPairs && testForThreeOfAKind(hand))
@@ -62,8 +63,22 @@ function testForFourOfAKind(hand = []) {
   return false;
 }
 
+function testForFlush(hand = []) {
+  const cardSuits = extractSuits(hand);
+  for (let i = 0; i < cardSuits.length; i++) {
+    console.log(cardSuits[i]);
+    if (cardSuits.filter((value) => value === cardSuits[i]).length === 5)
+      return true;
+  }
+
+  return false;
+}
 function extractValues(hand) {
   return hand.map((card) => card.substring(0, 1));
+}
+
+function extractSuits(hand) {
+  return hand.map((card) => card.substring(1));
 }
 
 const Result = {
