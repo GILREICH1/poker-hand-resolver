@@ -1,19 +1,19 @@
 class PokerHand {
   constructor(cards) {
     // cards is an array of 5 cards
-    this.cards = cards.split(" ");
+    this.cards = cards;
   }
   compareWith(pokerHand) {
-    const combo1 = findCombination(this.cards)
-    const combo2 = findCombination(pokerHand)
-    // iterate through possible hand values in reverse order
-    return Result.TIE;
+    const combo1 = findCombinationScore(this.cards.split(" "));
+    const combo2 = findCombinationScore(pokerHand.cards.split(" "));
+    if (combo1 > combo2) return Result.WIN;
+    else if (combo1 < combo2) return Result.LOSS;
+    else return Result.TIE;
   }
 }
 
-// returns the combination as a numeric value (e.g. 10.3 combinationScore.highCard)
-const findCombination = (hand = []) =>{
-  if (testForFlush(hand)) return 10;
+function findCombinationScore(hand = []) {
+  if (testForStraight(hand)) return combinationScores.straight;
   return 0;
 }
 
