@@ -1,6 +1,6 @@
 class PokerHand {
   constructor(cards) {
-    // cards is an array of 5 cards
+    // cards is an array of strings e.g. 5H
     this.cards = cards;
   }
   compareWith(pokerHand) {
@@ -17,11 +17,15 @@ function findCombinationScore(hand = []) {
   return 0;
 }
 
-// returns true or false.
-const testForFlush = (hand)=>{
-  // testForStraight()
-  // testForFlush()
-  return false;
+function testForStraight(hand = []) {
+  const values = hand.map((card) => card.substring(0, 1));
+  values.sort((a, b) => (cardsInOrder[a] > cardsInOrder[b] ? 1 : -1));
+  for (let i = 0; i < values.length - 1; i++) {
+    const currentCard = values[i];
+    const nextCard = values[i + 1];
+    if (cardsInOrder[nextCard] !== cardsInOrder[currentCard] + 1) return false;
+  }
+  return true;
 }
 
 TestForStraight() {
@@ -47,8 +51,23 @@ const combinationScores = {
   royalFlush: 10,
 };
 
-const cardsInOrder = ["A", 1, 2, 3, 4, 5, 6, 7, 8, 9, "T", "J", "Q", "K", "A"];
-// Map of combinations: score
+const cardsInOrder = {
+  A: 0,
+  1: 1,
+  2: 2,
+  3: 3,
+  4: 4,
+  5: 5,
+  6: 6,
+  7: 7,
+  8: 8,
+  9: 9,
+  T: 10,
+  J: 11,
+  Q: 12,
+  K: 12,
+  A: 13,
+};
 
 
 module.exports = { Result, PokerHand };
