@@ -13,20 +13,22 @@ class PokerHand {
 }
 
 function findCombinationScore(hand = []) {
+  const numberOfPairs = testForPairs(hand);
   if (testForStraight(hand)) return combinationScores.straight;
+  if (numberOfPairs && testForThreeOfAKind(hand))
+    return combinationScores.fullHouse;
   if (testForThreeOfAKind(hand)) return combinationScores.threeOfAKind;
-  if (testForPairs(hand) === 2) return combinationScores.twoPair;
-  if (testForPairs(hand) === 1) return combinationScores.pair;
+  if (numberOfPairs === 2) return combinationScores.twoPair;
+  if (numberOfPairs === 1) return combinationScores.pair;
   return 0;
 }
 
 function testForPairs(hand = []) {
   const cardValues = extractValues(hand);
   let numberOfPairsTimesTwo = 0;
-  cardValues.forEach((cardValue) => {
-    if (cardValues.indexOf(cardValue) !== cardValues.lastIndexOf(cardValue)) {
+  cardValues.forEach((testValue) => {
+    if (cardValues.filter((cardValue) => testValue === cardValue).length === 2)
       numberOfPairsTimesTwo++;
-    }
   });
   return numberOfPairsTimesTwo / 2;
 }
