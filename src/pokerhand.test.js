@@ -6,11 +6,10 @@ const hand2 = new PokerHand("4S 5S 8C AS AD");
 describe("PokerHand", () => {
   describe("cards", () => {
     it("a pokerHand instance should have a cards property", () => {
-      console.log(hand1.cards);
       expect(hand1.cards).toBeDefined();
     });
-    it("the cards property of a pokerhand instance should be ", () => {
-      expect(hand1.cards).toBeDefined();
+    it("the cards property of a pokerhand instance should be an array of length 5", () => {
+      expect(hand1.cards.length).toBe(5);
     });
   });
   describe("compareWith()", () => {
