@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.html",
   "scripts": {
+    "pokerhand": "node src/pokerhand.js",
     "test": "jest"
   },
   "devDependencies": {
