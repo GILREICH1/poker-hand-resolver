@@ -34,7 +34,20 @@ const Result = {
   TIE: 3,
 };
 
-const cardsOrder = ["A", 1,2,3,4,5,6,7,8,9,"T","J", "Q", "K", "A"]
+const combinationScores = {
+  highCard: 1,
+  pair: 2,
+  twoPair: 3,
+  threeOfAKind: 4,
+  straight: 5,
+  flush: 6,
+  fullHouse: 7,
+  fourOfAKind: 8,
+  straightFlush: 9,
+  royalFlush: 10,
+};
+
+const cardsInOrder = ["A", 1, 2, 3, 4, 5, 6, 7, 8, 9, "T", "J", "Q", "K", "A"];
 // Map of combinations: score
 
 
