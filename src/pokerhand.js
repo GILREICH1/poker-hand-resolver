@@ -1,13 +1,14 @@
-export class PokerHand {
-  compareWith() {
+class PokerHand {
+  compareWith(pokerHand) {
     return Result.TIE;
   }
 }
 
-export const Result = {
+const Result = {
   WIN: 1,
   LOSS: 2,
   TIE: 3,
 };
 
-export default PokerHand;
+module.exports = { Result, PokerHand };
+// export default PokerHand;
