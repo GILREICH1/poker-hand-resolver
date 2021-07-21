@@ -36,13 +36,13 @@ function testForPairs(hand = []) {
 }
 function testForThreeOfAKind(hand = []) {
   const cardValues = extractValues(hand);
-  let result = false;
-  cardValues.forEach((testValue) => {
-    if (cardValues.filter((cardValue) => testValue === cardValue).length === 3)
-      result = true;
-  });
-  return result;
+  for (let i = 0; i < cardValues.length; i++) {
+    if (cardValues.filter((value) => value === cardValues[i]).length === 3)
+      return true;
 }
+  return false;
+}
+
 function testForStraight(hand = []) {
   const values = extractValues(hand);
   values.sort((a, b) => (cardsInOrder[a] > cardsInOrder[b] ? 1 : -1));
