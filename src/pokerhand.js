@@ -13,22 +13,27 @@ class PokerHand {
 }
 
 function findCombinationScore(hand = []) {
-  const numberOfPairs = testForPairs(hand);
-  if (testForFlush(hand) && testForStraight(hand))
-    return combinationScores.straightFlush;
-  if (testForFlush(hand)) return combinationScores.flush;
-  if (testForFourOfAKind(hand)) return combinationScores.fourOfAKind;
-  if (testForStraight(hand)) return combinationScores.straight;
-  if (numberOfPairs && testForThreeOfAKind(hand))
+  const sortedValues = extractValues(hand).sort((a, b) =>
+    cardsValues[a] > cardsValues[b] ? 1 : -1
+  );
+
+  const numberOfPairs = testForPairs(sortedValues);
+  const flush = testForFlush(hand);
+  const straight = testForStraight(sortedValues);
+
+  if (flush && straight) return combinationScores.straightFlush;
+  if (flush) return combinationScores.flush;
+  if (testForFourOfAKind(sortedValues)) return combinationScores.fourOfAKind;
+  if (straight) return combinationScores.straight;
+  if (numberOfPairs && testForThreeOfAKind(sortedValues))
     return combinationScores.fullHouse;
-  if (testForThreeOfAKind(hand)) return combinationScores.threeOfAKind;
+  if (testForThreeOfAKind(sortedValues)) return combinationScores.threeOfAKind;
   if (numberOfPairs === 2) return combinationScores.twoPair;
   if (numberOfPairs === 1) return combinationScores.pair;
   return 0;
 }
 
-function testForPairs(hand = []) {
-  const cardValues = extractValues(hand);
+function testForPairs(cardValues) {
   let numberOfPairsTimesTwo = 0;
   cardValues.forEach((testValue) => {
     if (cardValues.filter((cardValue) => testValue === cardValue).length === 2)
@@ -36,8 +41,8 @@ function testForPairs(hand = []) {
   });
   return numberOfPairsTimesTwo / 2;
 }
-function testForThreeOfAKind(hand = []) {
-  const cardValues = extractValues(hand);
+
+function testForThreeOfAKind(cardValues) {
   for (let i = 0; i < cardValues.length; i++) {
     if (cardValues.filter((value) => value === cardValues[i]).length === 3)
       return true;
@@ -45,19 +50,16 @@ function testForThreeOfAKind(hand = []) {
   return false;
 }
 
-function testForStraight(hand = []) {
-  const values = extractValues(hand);
-  values.sort((a, b) => (cardsInOrder[a] > cardsInOrder[b] ? 1 : -1));
-  for (let i = 0; i < values.length - 1; i++) {
-    const currentCard = values[i];
-    const nextCard = values[i + 1];
-    if (cardsInOrder[nextCard] !== cardsInOrder[currentCard] + 1) return false;
+function testForStraight(cardValues) {
+  for (let i = 0; i < cardValues.length - 1; i++) {
+    const currentCard = cardValues[i];
+    const nextCard = cardValues[i + 1];
+    if (cardScores[nextCard] !== cardScores[currentCard] + 1) return false;
   }
   return true;
 }
 
-function testForFourOfAKind(hand = []) {
-  const cardValues = extractValues(hand);
+function testForFourOfAKind(cardValues) {
   for (let i = 0; i < cardValues.length; i++) {
     if (cardValues.filter((value) => value === cardValues[i]).length === 4)
       return true;
@@ -68,7 +70,6 @@ function testForFourOfAKind(hand = []) {
 function testForFlush(hand = []) {
   const cardSuits = extractSuits(hand);
   for (let i = 0; i < cardSuits.length; i++) {
-    console.log(cardSuits[i]);
     if (cardSuits.filter((value) => value === cardSuits[i]).length === 5)
       return true;
   }
@@ -102,7 +103,7 @@ const combinationScores = {
   royalFlush: 10,
 };
 
-const cardsInOrder = {
+const cardScores = {
   A: 0,
   1: 1,
   2: 2,
