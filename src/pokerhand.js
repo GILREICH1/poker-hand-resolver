@@ -63,6 +63,50 @@ class PokerHand {
   }
 }
 
+function findCombinationScore(hand = []) {
+  const sortedValues = extractValues(hand).sort((a, b) =>
+    cardScores[a] > cardScores[b] ? 1 : -1
+  );
+  const cardSuits = extractSuits(hand);
+  const highestCard = sortedValues[4];
+
+  const numberOfPairs = testForPairs(sortedValues);
+  // [,] -> numberOfPairs
+  const threeOfAKindScore = testForThreeOfAKind(sortedValues);
+
+  // Test for straightFlush
+  const flush = testForFlush(cardSuits);
+  const straight = straightScore(sortedValues);
+  if (flush && straight) return combinationScores.straightFlush;
+
+  if (flush) return combinationScores.flush;
+
+  if (testForFourOfAKind(sortedValues))
+    return combinationScores.fourOfAKind + cardScores[highestCard];
+
+  if (straight) return straight;
+
+  // is full house?
+  // TODO make full house function return a score 5.2
+  // outside compare 4.7 vs. 11.2 (higher triple wins)
+
+  // is double pair?
+  // function -> 4.6
+  // (4.6, 7.8) => 1 | 0 | -1
+
+  // table 555A2
+
+  // hand1 a4
+  // hand2 23
+  if (numberOfPairs && threeOfAKindScore) return combinationScores.fullHouse;
+
+  if (threeOfAKindScore) return threeOfAKindScore;
+  if (numberOfPairs === 2) return combinationScores.twoPair;
+  if (numberOfPairs === 1) return combinationScores.pair;
+
+  return cardScores[highestCard];
+}
+
 function testForPairs(cardValues = []) {
   let numberOfPairsTimesTwo = 0;
   cardValues.forEach((testValue) => {
