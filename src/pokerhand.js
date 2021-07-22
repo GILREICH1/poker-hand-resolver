@@ -116,13 +116,31 @@ function testForPairs(cardValues = []) {
   return numberOfPairsTimesTwo / 2;
 }
 
-// TODO return score of three of a kind plus score of the triple card
+// return score of three of a kind plus score of the triple card
 function testForThreeOfAKind(cardValues = []) {
-  for (let i = 0; i < cardValues.length - 2; i++) {
-    if (cardValues.filter((value) => value === cardValues[i]).length === 3)
-      return combinationScores.threeOfAKind + cardScores[cardValues[i]];
+  const frequencies = {};
+
+  for (const cardValue of cardValues) {
+    if (cardValue in frequencies) {
+      frequencies[cardValue]++;
+    } else {
+      frequencies[cardValue] = 1;
+    }
   }
-  return false;
+
+  // find card that forms TOAK
+  let TOAKCard = "";
+  Object.entries(frequencies).forEach(([key, value]) => {
+    if (value === 3) {
+      TOAKCard = key;
+    }
+  });
+
+  if (TOAKCard) {
+    return combinationScores.threeOfAKind + cardScores[TOAKCard];
+  }
+
+  return 0;
 }
 
 // returns value of straight plus score of highest card in case of tie
