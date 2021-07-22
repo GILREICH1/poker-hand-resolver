@@ -2,6 +2,9 @@ const {
   PokerHand,
   Result,
   extractSortedCardValues,
+  testForFlush,
+  testForStraight,
+  straightScore,
 } = require("./pokerhand.js");
 
 const hand1 = new PokerHand("AC 4S 5S 8C AH");
@@ -36,6 +39,25 @@ describe("PokerHand", () => {
   it("extractSortedCardValues sorts a hand", () => {
     const hand1 = ["AS", "4S", "6C", "5H", "2D"];
     expect(extractSortedCardValues(hand1)).toEqual(["2", "4", "5", "6", "A"]);
+  });
+
+  it("testForStraight", () => {
+    const straight = ["2", "3", "4", "5", "6"];
+    const notStraight = ["2", "3", "4", "5", "7"];
+    expect(testForStraight(straight)).toBe(true);
+    expect(testForStraight(notStraight)).toBe(false);
+  });
+
+  it.only("straightScore", () => {
+    const straight = ["2", "3", "4", "5", "6"];
+    expect(straightScore(straight)).toBe(5.06);
+  });
+
+  it("testForFlush", () => {
+    const flush = ["S", "S", "S", "S", "S"];
+    const notFlush = ["S", "S", "S", "S", "H"];
+    expect(testForFlush(flush)).toBe(true);
+    expect(testForFlush(notFlush)).toBe(false);
   });
 
   it("resolve TOAK with different Kickers", () => {

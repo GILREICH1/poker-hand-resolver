@@ -64,27 +64,24 @@ class PokerHand {
 }
 
 function findCombinationScore(hand = []) {
-  const sortedValues = extractValues(hand).sort((a, b) =>
-    cardScores[a] > cardScores[b] ? 1 : -1
-  );
-  const cardSuits = extractSuits(hand);
+  const sortedValues = extractSortedCardValues(hand);
+  const cardSuits = extractCardSuits(hand);
   const highestCard = sortedValues[4];
 
-  const numberOfPairs = testForPairs(sortedValues);
-  // [,] -> numberOfPairs
   const threeOfAKindScore = testForThreeOfAKind(sortedValues);
 
-  // Test for straightFlush
-  const flush = testForFlush(cardSuits);
-  const straight = straightScore(sortedValues);
-  if (flush && straight) return combinationScores.straightFlush;
+  const isFlush = testForFlush(cardSuits);
+  // TODO: score flush considering tie breaker
+  const isStraight = testForStraight(sortedValues);
 
-  if (flush) return combinationScores.flush;
+  if (isFlush && isStraight) return combinationScores.straightFlush;
+
+  if (isFlush) return combinationScores.flush;
 
   if (testForFourOfAKind(sortedValues))
     return combinationScores.fourOfAKind + cardScores[highestCard];
 
-  if (straight) return straight;
+  if (isStraight) return straightScore(sortedValues);
 
   // is full house?
   // TODO make full house function return a score 5.2
@@ -141,20 +138,31 @@ function findKeyByFrequency(frequencies = {}, frequency = 3) {
   return "";
 }
 
-// returns value of straight plus score of highest card in case of tie
-// straightScore()
-  // TODO handle Ace as 1
-  for (let i = 0; i < cardValues.length - 1; i++) {
-    const currentCard = cardValues[i];
-    const nextCard = cardValues[i + 1];
-    if (cardScores[nextCard] !== cardScores[currentCard] + 1) return 0;
+// note: smallest to biggest
+function testForStraight(sortedCardValues = []) {
+  for (let i = 0; i < sortedCardValues.length - 1; i++) {
+    const currentCard = sortedCardValues[i];
+    const nextCard = sortedCardValues[i + 1];
+    let scoresDifference = cardScores[nextCard] - cardScores[currentCard];
+    scoresDifference = Math.round(scoresDifference * 100) / 100;
+    if (scoresDifference !== 0.01) {
+      return false;
+    }
   }
 
+  return true;
+}
+
+// only called when we have a straight
+// returns value of straight plus score of highest card in case of tie
+function straightScore(cardValues = []) {
   return combinationScores.straight + cardScores[cardValues[4]];
 }
 
 function testForFourOfAKind(cardValues = []) {
   for (let i = 0; i < cardValues.length; i++) {
+    // filter(cardValues, cardValues[i])
+    // TODO Extract logic out of IF STATEMENT
     if (cardValues.filter((value) => value === cardValues[i]).length === 4)
       return true;
   }
