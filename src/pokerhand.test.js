@@ -5,6 +5,7 @@ const {
   testForFlush,
   testForStraight,
   straightScore,
+  testForFourOfAKind,
 } = require("./pokerhand.js");
 
 const hand1 = new PokerHand("AC 4S 5S 8C AH");
@@ -48,9 +49,16 @@ describe("PokerHand", () => {
     expect(testForStraight(notStraight)).toBe(false);
   });
 
-  it.only("straightScore", () => {
+  it("straightScore", () => {
     const straight = ["2", "3", "4", "5", "6"];
     expect(straightScore(straight)).toBe(5.06);
+  });
+
+  it("testForFourOfAKind", () => {
+    const FOAK = ["2", "2", "2", "2", "6"];
+    const noFOAK = ["2", "2", "2", "5", "6"];
+    expect(testForFourOfAKind(FOAK)).toBe(true);
+    expect(testForFourOfAKind(noFOAK)).toBe(false);
   });
 
   it("testForFlush", () => {
