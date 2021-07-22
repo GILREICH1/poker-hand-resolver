@@ -118,33 +118,31 @@ function testForPairs(cardValues = []) {
 
 // return score of three of a kind plus score of the triple card
 function testForThreeOfAKind(cardValues = []) {
-  const frequencies = {};
-
-  for (const cardValue of cardValues) {
-    if (cardValue in frequencies) {
-      frequencies[cardValue]++;
-    } else {
-      frequencies[cardValue] = 1;
-    }
-  }
-
-  // find card that forms TOAK
-  let TOAKCard = "";
-  Object.entries(frequencies).forEach(([key, value]) => {
-    if (value === 3) {
-      TOAKCard = key;
-    }
-  });
+  const frequencies = extractFrequencies(cardValues);
+  const TOAKCard = findKeyByFrequency(frequencies, 3);
 
   if (TOAKCard) {
     return combinationScores.threeOfAKind + cardScores[TOAKCard];
   }
 
   return 0;
+    }
+  });
+
+// note: don't use below 3
+// TODO: move to helpers
+function findKeyByFrequency(frequencies = {}, frequency = 3) {
+  for (const [key, value] of Object.entries(frequencies)) {
+    if (value === frequency) {
+      return key;
+    }
+  }
+
+  return "";
 }
 
 // returns value of straight plus score of highest card in case of tie
-function testForStraight(cardValues = []) {
+// straightScore()
   // TODO handle Ace as 1
   for (let i = 0; i < cardValues.length - 1; i++) {
     const currentCard = cardValues[i];
@@ -163,13 +161,11 @@ function testForFourOfAKind(cardValues = []) {
   return false;
 }
 
-function testForFlush(cardSuits = []) {
-  for (let i = 0; i < cardSuits.length; i++) {
-    if (cardSuits.filter((value) => value === cardSuits[i]).length === 5)
-      return true;
-  }
+function isFlush(cardSuits = []) {
+  const frequencies = extractFrequencies(cardSuits);
+  const flushSuit = findKeyByFrequency(frequencies, 5);
 
-  return false;
+  return Boolean(flushSuit);
 }
 
 // ['AS', '4S', '6C', '5H', '2D '] => ['2', '4' ,'5' ,'6', 'A']
