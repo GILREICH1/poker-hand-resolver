@@ -14,6 +14,8 @@ class PokerHand {
 
 function findCombinationScore(hand = []) {
   const numberOfPairs = testForPairs(hand);
+  if (testForFlush(hand) && testForStraight(hand))
+    return combinationScores.straightFlush;
   if (testForFlush(hand)) return combinationScores.flush;
   if (testForFourOfAKind(hand)) return combinationScores.fourOfAKind;
   if (testForStraight(hand)) return combinationScores.straight;
