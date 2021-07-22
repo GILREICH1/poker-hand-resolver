@@ -1,23 +1,19 @@
 class PokerHand {
   constructor(cards) {
-    // cards is an array of strings e.g. 5H
     this.cards = cards;
+    this.score = this.findCombinationScore(this.cards.split(" "));
   }
   compareWith(pokerHand) {
-    const combo1 = findCombinationScore(this.cards.split(" "));
-    const combo2 = findCombinationScore(pokerHand.cards.split(" "));
-    if (combo1 > combo2) return Result.WIN;
-    else if (combo1 < combo2) return Result.LOSS;
+    const comboScore2 = this.findCombinationScore(pokerHand.cards.split(" "));
+    if (this.score > comboScore2) return Result.WIN;
+    else if (this.score < comboScore2) return Result.LOSS;
     else return Result.TIE;
   }
-}
 
 // TODO
-// function checkHandIsValid(hand){}
+  //  checkHandIsValid(hand){}
 
-function compareScoreInTie(){}
-
-function findCombinationScore(hand = []) {
+  static findCombinationScore(hand = []) {
   const sortedValues = extractValues(hand).sort((a, b) =>
     cardScores[a] > cardScores[b] ? 1 : -1
   );
@@ -29,8 +25,7 @@ function findCombinationScore(hand = []) {
   const straight = testForStraight(sortedValues);
   const threeOfAKind = testForThreeOfAKind(sortedValues);
 
-  if (flush && straight)
-    return combinationScores.straightFlush + cardScores[highestCard];
+    if (flush && straight) return combinationScores.straightFlush;
   if (flush) return combinationScores.flush;
   if (testForFourOfAKind(sortedValues))
     return combinationScores.fourOfAKind + cardScores[highestCard];
@@ -40,6 +35,7 @@ function findCombinationScore(hand = []) {
   if (numberOfPairs === 2) return combinationScores.twoPair;
   if (numberOfPairs === 1) return combinationScores.pair;
   return cardScores[highestCard] / 100;
+  }
 }
 
 function testForPairs(cardValues = []) {
