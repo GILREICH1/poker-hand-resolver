@@ -28,4 +28,11 @@ describe("PokerHand", () => {
       expect(hand1.compareWith(hand2)).toBe(Result.TIE);
     });
   });
+
+  it("resolve TOAK with different Kickers", () => {
+    const TOAK1 = new PokerHand("AC QS KS AC AH");
+    const TOAK2 = new PokerHand("AS 5S 6C AS AD");
+
+    expect(TOAK1.compareWith(TOAK2)).toBe(Result.WIN);
+  });
 });
