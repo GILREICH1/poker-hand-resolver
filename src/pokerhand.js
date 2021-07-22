@@ -34,7 +34,7 @@ function findCombinationScore(hand = []) {
   if (flush) return combinationScores.flush;
   if (testForFourOfAKind(sortedValues))
     return combinationScores.fourOfAKind + cardScores[highestCard];
-  if (straight) return combinationScores.straight;
+    if (straight) return straight;
   if (numberOfPairs && threeOfAKind) return combinationScores.fullHouse;
   if (threeOfAKind) return combinationScores.threeOfAKind;
   if (numberOfPairs === 2) return combinationScores.twoPair;
@@ -64,9 +64,10 @@ function testForStraight(cardValues = []) {
   for (let i = 0; i < cardValues.length - 1; i++) {
     const currentCard = cardValues[i];
     const nextCard = cardValues[i + 1];
-    if (cardScores[nextCard] !== cardScores[currentCard] + 1) return false;
+    if (cardScores[nextCard] !== cardScores[currentCard] + 1) return 0;
   }
-  return true;
+
+  return  combinationScores.straight + (cardScores[cardValues[4]] / 100); // prettier-ignore
 }
 
 function testForFourOfAKind(cardValues = []) {
