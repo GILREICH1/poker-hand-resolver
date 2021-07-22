@@ -6,8 +6,14 @@ class PokerHand {
   compareWith(pokerHand) {
     const comboScore2 = this.findCombinationScore(pokerHand.cards.split(" "));
     if (this.score > comboScore2) return Result.WIN;
-    else if (this.score < comboScore2) return Result.LOSS;
-    else return Result.TIE;
+    if (this.score < comboScore2) return Result.LOSS;
+    // determine the kind of tie
+    const areBothTOAK =
+      Math.floor(this.score) === combinationScores.threeOfAKind;
+
+    if (areBothTOAK) return this.TOAKTieResolver(pokerHand.cards);
+
+    return Result.TIE;
   }
 
   // TO DO checkHandIsValid(hand){}
@@ -34,6 +40,26 @@ class PokerHand {
     if (numberOfPairs === 2) return combinationScores.twoPair;
     if (numberOfPairs === 1) return combinationScores.pair;
     return cardScores[highestCard];
+  }
+  TOAKTieResolver(comparisonCards = [], combo = "threeOfAKind") {
+    const scoreOfTOAKCard = this.score - combinationScores[combo];
+    const sanitizedScore = Math.round(scoreOfTOAKCard * 100) / 100;
+    const valueOfTOAKCard = Object.keys(cardScores).find(
+      (score) => cardScores[score] === sanitizedScore
+    );
+
+    // TODO getKickerSum()
+    const comparisonCardsKickerScore = extractValues(comparisonCards)
+      .filter((value) => value !== valueOfTOAKCard)
+      .reduce((acc, cur) => acc + cardScores[cur], 0);
+
+    const myCardsKickerScore = extractValues(this.cards)
+      .filter((value) => value !== valueOfTOAKCard)
+      .reduce((acc, cur) => acc + cardScores[cur], 0);
+
+    if (myCardsKickerScore > comparisonCardsKickerScore) return Result.WIN;
+    if (myCardsKickerScore < comparisonCardsKickerScore) return Result.LOSS;
+    return Result.TIE;
   }
 }
 
