@@ -1,4 +1,8 @@
-const { PokerHand, Result } = require("./pokerhand.js");
+const {
+  PokerHand,
+  Result,
+  extractSortedCardValues,
+} = require("./pokerhand.js");
 
 const hand1 = new PokerHand("AC 4S 5S 8C AH");
 const hand2 = new PokerHand("4S 5S 8C AS AD");
@@ -27,6 +31,11 @@ describe("PokerHand", () => {
     it("ties", () => {
       expect(hand1.compareWith(hand2)).toBe(Result.TIE);
     });
+  });
+
+  it("extractSortedCardValues sorts a hand", () => {
+    const hand1 = ["AS", "4S", "6C", "5H", "2D"];
+    expect(extractSortedCardValues(hand1)).toEqual(["2", "4", "5", "6", "A"]);
   });
 
   it("resolve TOAK with different Kickers", () => {

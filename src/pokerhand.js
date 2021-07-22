@@ -154,8 +154,11 @@ function testForFlush(cardSuits = []) {
   return false;
 }
 
-function extractValues(hand = []) {
-  return hand.map((card) => card.substring(0, 1));
+// ['AS', '4S', '6C', '5H', '2D '] => ['2', '4' ,'5' ,'6', 'A']
+function extractSortedCardValues(hand = []) {
+  return hand
+    .map((card) => card.substring(0, 1))
+    .sort((a, b) => cardScores[a] - cardScores[b]);
 }
 
 function extractSuits(hand = []) {
