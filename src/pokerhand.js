@@ -1,7 +1,7 @@
 class PokerHand {
   constructor(cards) {
-    this.cards = cards;
-    this.score = this.findCombinationScore(this.cards.split(" "));
+    this.cards = cards.split(" ");
+    this.score = this.findCombinationScore(this.cards);
   }
   compareWith(pokerHand) {
     const comboScore2 = this.findCombinationScore(pokerHand.cards.split(" "));
@@ -10,31 +10,30 @@ class PokerHand {
     else return Result.TIE;
   }
 
-// TODO
-  //  checkHandIsValid(hand){}
+  // TO DO checkHandIsValid(hand){}
 
-  static findCombinationScore(hand = []) {
-  const sortedValues = extractValues(hand).sort((a, b) =>
-    cardScores[a] > cardScores[b] ? 1 : -1
-  );
-  const cardSuits = extractSuits(hand);
-  const highestCard = sortedValues[4];
+  findCombinationScore(hand = []) {
+    const sortedValues = extractValues(hand).sort((a, b) =>
+      cardScores[a] > cardScores[b] ? 1 : -1
+    );
+    const cardSuits = extractSuits(hand);
+    const highestCard = sortedValues[4];
 
-  const numberOfPairs = testForPairs(sortedValues);
-  const flush = testForFlush(cardSuits);
-  const straight = testForStraight(sortedValues);
-  const threeOfAKind = testForThreeOfAKind(sortedValues);
+    const numberOfPairs = testForPairs(sortedValues);
+    const flush = testForFlush(cardSuits);
+    const straight = testForStraight(sortedValues);
+    const threeOfAKind = testForThreeOfAKind(sortedValues);
 
     if (flush && straight) return combinationScores.straightFlush;
-  if (flush) return combinationScores.flush;
-  if (testForFourOfAKind(sortedValues))
-    return combinationScores.fourOfAKind + cardScores[highestCard];
+    if (flush) return combinationScores.flush;
+    if (testForFourOfAKind(sortedValues))
+      return combinationScores.fourOfAKind + cardScores[highestCard];
     if (straight) return straight;
-  if (numberOfPairs && threeOfAKind) return combinationScores.fullHouse;
-  if (threeOfAKind) return combinationScores.threeOfAKind;
-  if (numberOfPairs === 2) return combinationScores.twoPair;
-  if (numberOfPairs === 1) return combinationScores.pair;
-  return cardScores[highestCard] / 100;
+    if (numberOfPairs && threeOfAKind) return combinationScores.fullHouse;
+    if (threeOfAKind) return combinationScores.threeOfAKind;
+    if (numberOfPairs === 2) return combinationScores.twoPair;
+    if (numberOfPairs === 1) return combinationScores.pair;
+    return cardScores[highestCard];
   }
 }
 
@@ -47,14 +46,16 @@ function testForPairs(cardValues = []) {
   return numberOfPairsTimesTwo / 2;
 }
 
+// TODO return score of three of a kind plus score of the triple card
 function testForThreeOfAKind(cardValues = []) {
-  for (let i = 0; i < cardValues.length; i++) {
+  for (let i = 0; i < cardValues.length - 2; i++) {
     if (cardValues.filter((value) => value === cardValues[i]).length === 3)
-      return true;
-}
+      return combinationScores.threeOfAKind + cardScores[cardValues[i]];
+  }
   return false;
 }
 
+// returns value of straight plus score of highest card in case of tie
 function testForStraight(cardValues = []) {
   // TODO handle Ace as 1
   for (let i = 0; i < cardValues.length - 1; i++) {
@@ -63,7 +64,7 @@ function testForStraight(cardValues = []) {
     if (cardScores[nextCard] !== cardScores[currentCard] + 1) return 0;
   }
 
-  return  combinationScores.straight + (cardScores[cardValues[4]] / 100); // prettier-ignore
+  return combinationScores.straight + cardScores[cardValues[4]];
 }
 
 function testForFourOfAKind(cardValues = []) {
@@ -113,21 +114,20 @@ const combinationScores = {
 // TODO ace as both low and high
 const cardScores = {
   // A: 0,
-  2: 2,
-  3: 3,
-  4: 4,
-  5: 5,
-  6: 6,
-  7: 7,
-  8: 8,
-  9: 9,
-  T: 10,
-  J: 11,
-  Q: 12,
-  K: 12,
-  A: 13,
+  2: 0.02,
+  3: 0.03,
+  4: 0.04,
+  5: 0.05,
+  6: 0.06,
+  7: 0.07,
+  8: 0.08,
+  9: 0.09,
+  T: 0.1,
+  J: 0.11,
+  Q: 0.12,
+  K: 0.12,
+  A: 0.13,
 };
-
 
 module.exports = { Result, PokerHand };
 // export default PokerHand;
