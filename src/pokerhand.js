@@ -73,37 +73,36 @@ function findCombinationScore(hand = []) {
   const cardSuits = extractCardSuits(hand);
   const highestCard = sortedValues[4];
 
-  const TOAKcard = getTOAKCard(sortedValues);
-  const isFOAK = testForFourOfAKind(sortedValues);
-  const isFlush = testForFlush(cardSuits);
+  // TEST FOR STRAIGHTFLUSH
   // TODO: score flush considering tie breaker
+  const isFlush = testForFlush(cardSuits);
   const isStraight = testForStraight(sortedValues);
-
   if (isFlush && isStraight) return combinationScores.straightFlush;
 
-  if (isFlush) return combinationScores.flush;
-
+  // TEST FOR FOUR OF A KIND
+  const isFOAK = testForFourOfAKind(sortedValues);
   if (isFOAK) return combinationScores.fourOfAKind + cardScores[highestCard];
 
-  if (isStraight) return getStraightScore(sortedValues);
-
-  // is full house?
+  // TEST FOR FULL HOUSE
   // TODO make full house function return a score 5.2
   // outside compare 4.7 vs. 11.2 (higher triple wins)
-
-  // is double pair?
-  // function -> 4.6
-  // (4.6, 7.8) => 1 | 0 | -1
-
-  // table 555A2
-
-  // hand1 a4
-  // hand2 23
+  const TOAKcard = getTOAKCard(sortedValues);
   const numberOfPairs = getPairsCount(sortedValues);
   if (numberOfPairs && TOAKcard) return combinationScores.fullHouse;
 
+  // TEST FOR FLUSH
+  if (isFlush) return combinationScores.flush;
+
+  // TEST FOR STRAIGHT
+  if (isStraight) return getStraightScore(sortedValues);
+
+  // TEST FOR THREE OF A KIND
   if (TOAKcard) return getThreeOfKindScore(TOAKcard);
+
+  // TEST FOR TWO PAIR
   if (numberOfPairs === 2) return combinationScores.twoPair;
+
+  // TEST FOR A PAIR
   if (numberOfPairs === 1) return combinationScores.pair;
 
   return cardScores[highestCard];
