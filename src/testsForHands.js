@@ -15,11 +15,11 @@ function testForStraight(sortedCardValues = []) {
   return true;
 }
 
-function testForFourOfAKind(cardValues = []) {
+function getFOAKCard(cardValues = []) {
   const frequencies = extractFrequencies(cardValues);
   const FOAKCard = findKeyByFrequency(frequencies, 4);
 
-  return Boolean(FOAKCard);
+  return FOAKCard;
 }
 
 function testForFlush(cardSuits = []) {
@@ -29,4 +29,26 @@ function testForFlush(cardSuits = []) {
   return Boolean(flushSuit);
 }
 
-module.exports = { testForStraight, testForFourOfAKind, testForFlush };
+function getTOAKCard(cardValues = []) {
+  const frequencies = extractFrequencies(cardValues);
+  return findKeyByFrequency(frequencies, 3);
+}
+
+function getPairsCards(cardValues = []) {
+  const frequencies = extractFrequencies(cardValues);
+  const pairCards = [];
+  for (const [key, value] of Object.entries(frequencies)) {
+    if (value === 2) {
+      pairCards.push(key);
+    }
+  }
+  return pairCards;
+}
+
+module.exports = {
+  testForStraight,
+  getFOAKCard,
+  testForFlush,
+  getTOAKCard,
+  getPairsCards,
+};

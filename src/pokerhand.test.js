@@ -1,11 +1,18 @@
 const { PokerHand } = require("./pokerhand.js");
 const { extractSortedCardValues } = require("./helpers");
 const { Result } = require("./constants");
-const { getStraightScore } = require("./handScorers");
+const {
+  getStraightScore,
+  getFlushScore,
+  getThreeOfKindScore,
+  getFullHouseScore,
+  getFOAKScore,
+} = require("./handScorers");
 const {
   testForStraight,
-  testForFourOfAKind,
+  getFOAKCard,
   testForFlush,
+  getPairsCards,
 } = require("./testsForHands");
 
 describe("testForHands functions", () => {
@@ -16,25 +23,47 @@ describe("testForHands functions", () => {
     expect(testForStraight(notStraight)).toBe(false);
   });
 
-  it("testForFourOfAKind", () => {
+  it("getFOAKCard", () => {
     const FOAK = ["2", "2", "2", "2", "6"];
     const noFOAK = ["2", "2", "2", "5", "6"];
-    expect(testForFourOfAKind(FOAK)).toBe(true);
-    expect(testForFourOfAKind(noFOAK)).toBe(false);
+    expect(getFOAKCard(FOAK)).toBe("2");
+    expect(getFOAKCard(noFOAK)).toBe("");
   });
 
-  it("testForFlush", () => {
+  it("testForFlush function", () => {
     const flush = ["S", "S", "S", "S", "S"];
     const notFlush = ["S", "S", "S", "S", "H"];
     expect(testForFlush(flush)).toBe(true);
     expect(testForFlush(notFlush)).toBe(false);
   });
+  it("getPairsCards function", () => {
+    const pair = ["2", "2", "3", "4", "5"];
+    const notPair = ["A", "2", "3", "4", "5"];
+    expect(getPairsCards(pair)).toEqual(["2"]);
+    expect(getPairsCards(notPair)).toEqual([]);
+  });
 });
 
 describe("handScorers functions", () => {
-  it("straightScore", () => {
+  it("correctly evaluates a TOAK score", () => {
+    const TOAKCard = "T";
+    expect(getThreeOfKindScore(TOAKCard)).toBe(4.1);
+  });
+  it("correctly evaluates a straight Score", () => {
     const straight = ["2", "3", "4", "5", "6"];
     expect(getStraightScore(straight)).toBe(5.06);
+  });
+  it("correctly evaluates a flush score", () => {
+    const flush = ["2", "3", "4", "5", "6"];
+    expect(getFlushScore(flush)).toBe(6.06);
+  });
+  it("correctly evaluates a Full house score", () => {
+    const TOAKCard = "T";
+    expect(getFullHouseScore(TOAKCard)).toBe(7.1);
+  });
+  it("correctly evaluates a Four of a Kind score", () => {
+    const FOAKCard = "T";
+    expect(getFOAKScore(FOAKCard)).toBe(8.1);
   });
 });
 

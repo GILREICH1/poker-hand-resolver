@@ -1,19 +1,19 @@
-const {
-  extractFrequencies,
-  findKeyByFrequency,
-  extractCardSuits,
-  extractSortedCardValues,
-} = require("./helpers");
+const { extractCardSuits, extractSortedCardValues } = require("./helpers");
 const { Result, combinationScores, cardScores } = require("./constants");
 const {
   getThreeOfKindScore,
   getStraightScore,
   getFlushScore,
+  getFullHouseScore,
+  getFOAKScore,
+  getPairScore,
 } = require("./handScorers");
 const {
   testForStraight,
-  testForFourOfAKind,
+  getFOAKCard,
   testForFlush,
+  getTOAKCard,
+  getPairsCards,
 } = require("./testsForHands");
 
 class PokerHand {
@@ -36,8 +36,6 @@ class PokerHand {
 
     return Result.TIE;
   }
-
-  // 555-89 -> 4.05 combo1 = {name: 'three', cardValue: 4}
 
   // kicker issue with: pair, 2 pairs, toak, foak
   // in case of two identical TOAK hands
@@ -78,21 +76,19 @@ function findCombinationScore(hand = []) {
   const highestCard = sortedValues[4];
 
   // TEST FOR STRAIGHTFLUSH
-  // TODO: score flush
   const isFlush = testForFlush(cardSuits);
   const isStraight = testForStraight(sortedValues);
-  if (isFlush && isStraight) return combinationScores.straightFlush;
+  if (isFlush && isStraight)
+    return combinationScores.straightFlush + cardScores[highestCard];
 
   // TEST FOR FOUR OF A KIND
-  const isFOAK = testForFourOfAKind(sortedValues);
-  if (isFOAK) return combinationScores.fourOfAKind + cardScores[highestCard];
+  const FOAKCard = getFOAKCard(sortedValues);
+  if (FOAKCard) return getFOAKScore(FOAKCard);
 
   // TEST FOR FULL HOUSE
-  // TODO make full house function return a score 5.2
-  // outside compare 4.7 vs. 11.2 (higher triple wins)
   const TOAKcard = getTOAKCard(sortedValues);
-  const numberOfPairs = getPairsCount(sortedValues);
-  if (numberOfPairs && TOAKcard) return combinationScores.fullHouse;
+  const pairsArray = getPairsCards(sortedValues);
+  if (pairsArray.length !== 0 && TOAKcard) return getFullHouseScore(TOAKcard);
 
   // TEST FOR FLUSH
   if (isFlush) return getFlushScore(sortedValues);
@@ -104,27 +100,12 @@ function findCombinationScore(hand = []) {
   if (TOAKcard) return getThreeOfKindScore(TOAKcard);
 
   // TEST FOR TWO PAIR
-  if (numberOfPairs === 2) return combinationScores.twoPair;
+  if (pairsArray.length === 2) return combinationScores.twoPair;
 
   // TEST FOR A PAIR
-  if (numberOfPairs === 1) return combinationScores.pair;
+  if (pairsArray.length === 1) return combinationScores.pair;
 
   return cardScores[highestCard];
-}
-
-function getPairsCount(cardValues = []) {
-  let numberOfPairsTimesTwo = 0;
-  cardValues.forEach((testValue) => {
-    if (cardValues.filter((cardValue) => testValue === cardValue).length === 2)
-      numberOfPairsTimesTwo++;
-  });
-  return numberOfPairsTimesTwo / 2;
-}
-
-// return score of three of a kind plus score of the triple card
-function getTOAKCard(cardValues = []) {
-  const frequencies = extractFrequencies(cardValues);
-  return findKeyByFrequency(frequencies, 3);
 }
 
 module.exports = {
