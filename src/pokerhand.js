@@ -1,4 +1,8 @@
-const { extractCardSuits, extractSortedCardValues } = require("./helpers");
+const {
+  extractCardSuits,
+  extractSortedCardValues,
+  extractFrequencies,
+} = require("./helpers");
 const { Result, combinationScores, cardScores } = require("./constants");
 const {
   getThreeOfKindScore,
@@ -20,28 +24,30 @@ class PokerHand {
   constructor(cards) {
     this.cards = cards.split(" ");
     this.score = findCombinationScore(this.cards);
+    this.comboName = getCombinationName(this.score);
   }
   compareWith(pokerHand = []) {
     const comboScore2 = pokerHand.score;
     if (this.score > comboScore2) return Result.WIN;
     if (this.score < comboScore2) return Result.LOSS;
-    // determine the kind of tie
-    const areBothTOAK =
-      Math.floor(this.score) === combinationScores.threeOfAKind;
 
-    if (areBothTOAK) return this.TOAKTieResolver(pokerHand.cards);
+    // determine the kind of tie
+    // TODO SECOND STAGE TIE RESOLVER
+
+    if (this.comboName === "threeOfAKind")
+      return this.secondStageTieResolver(pokerHand.cards, this.comboName);
 
     return Result.TIE;
   }
 
-  TOAKTieResolver(comparisonCards = [], combo = "threeOfAKind") {
-    const scoreOfTOAKCard = this.score - combinationScores[combo];
+  secondStageTieResolver(comparisonCards = [], comboName = "pair") {
+    const scoreOfTOAKCard = this.score - combinationScores[comboName];
     const sanitizedScore = Math.round(scoreOfTOAKCard * 100) / 100;
     const valueOfTOAKCard = Object.keys(cardScores).find(
       (score) => cardScores[score] === sanitizedScore
     );
 
-    // TODO getKickerSum()
+    // TODO kickerResolver()
     const comparisonCardsKickerScore = extractSortedCardValues(comparisonCards)
       .filter((value) => value !== valueOfTOAKCard)
       .reduce((acc, cur) => acc + cardScores[cur], 0);
@@ -53,6 +59,15 @@ class PokerHand {
     if (myCardsKickerScore > comparisonCardsKickerScore) return Result.WIN;
     if (myCardsKickerScore < comparisonCardsKickerScore) return Result.LOSS;
     return Result.TIE;
+  }
+}
+
+function getCombinationName(totalScore) {
+  const comboScore = Math.floor(totalScore);
+  for (const [comboName, score] of Object.entries(combinationScores)) {
+    if (comboScore === score) {
+      return comboName;
+    }
   }
 }
 
