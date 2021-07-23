@@ -124,10 +124,10 @@ describe("PokerHand", () => {
 
   describe("the comboCards property of a hand", () => {
     it("comboCards property present", () => {
-      expect(pair1.comboCards).toBeDefined();
+      expect(pair1.comboCardsValues).toBeDefined();
     });
     it("should be the correct comboCards", () => {
-      expect(pair1.comboCards).toBe("A");
+      expect(pair1.comboCardsValues).toBe("A");
     });
   });
 
