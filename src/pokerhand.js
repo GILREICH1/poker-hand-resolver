@@ -78,7 +78,7 @@ function findCombinationScore(hand = []) {
   const highestCard = sortedValues[4];
 
   // TEST FOR STRAIGHTFLUSH
-  // TODO: score flush considering tie breaker
+  // TODO: score flush
   const isFlush = testForFlush(cardSuits);
   const isStraight = testForStraight(sortedValues);
   if (isFlush && isStraight) return combinationScores.straightFlush;
@@ -112,10 +112,6 @@ function findCombinationScore(hand = []) {
   return cardScores[highestCard];
 }
 
-// return score of pairs
-// AA432 => [26,0] / 2.26
-// 22441 => [4,8]
-// 47689 => [0,0]
 function getPairsCount(cardValues = []) {
   let numberOfPairsTimesTwo = 0;
   cardValues.forEach((testValue) => {
@@ -132,11 +128,6 @@ function getTOAKCard(cardValues = []) {
 }
 
 module.exports = {
-  Result,
   PokerHand,
-  extractSortedCardValues,
-  testForFlush,
-  testForStraight,
-  straightScore: getStraightScore,
-  testForFourOfAKind,
+  findCombinationScore,
 };
