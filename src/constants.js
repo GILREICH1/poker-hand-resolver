@@ -30,8 +30,8 @@ const cardScores = {
   T: 0.1,
   J: 0.11,
   Q: 0.12,
-  K: 0.12,
-  A: 0.13,
+  K: 0.13,
+  A: 0.14,
 };
 
 module.exports = { Result, combinationScores, cardScores };

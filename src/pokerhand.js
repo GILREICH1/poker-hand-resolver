@@ -36,7 +36,7 @@ class PokerHand {
 
     return Result.TIE;
   }
-  //
+
   secondStageTieResolver(comparisonCards = [], comboName = "pair") {
     const thisCardsKickers = extractSortedCardValues(this.cards).filter(
       (cardValue) => cardValue !== this.comboCardsValues
@@ -45,26 +45,22 @@ class PokerHand {
       comparisonCards
     ).filter((cardValue) => cardValue !== this.comboCardsValues);
 
-    // return kickerResolve(thisCardsKickers, comparisonCardsKickers)
-
-    const scoreOfTOAKCard = this.score - combinationScores[comboName];
-    const sanitizedScore = Math.round(scoreOfTOAKCard * 100) / 100;
-    const valueOfTOAKCard = Object.keys(cardScores).find(
-      (score) => cardScores[score] === sanitizedScore
-    );
-
-    const comparisonCardsKickerScore = extractSortedCardValues(comparisonCards)
-      .filter((value) => value !== valueOfTOAKCard)
-      .reduce((acc, cur) => acc + cardScores[cur], 0);
-
-    const myCardsKickerScore = extractSortedCardValues(this.cards)
-      .filter((value) => value !== valueOfTOAKCard)
-      .reduce((acc, cur) => acc + cardScores[cur], 0);
-
-    if (myCardsKickerScore > comparisonCardsKickerScore) return Result.WIN;
-    if (myCardsKickerScore < comparisonCardsKickerScore) return Result.LOSS;
-    return Result.TIE;
+    return kickerResolver(thisCardsKickers, comparisonCardsKickers);
   }
+}
+
+function kickerResolver(nonComboValues1 = [], nonComboValues2 = []) {
+  console.log(nonComboValues1);
+  console.log(nonComboValues2);
+  for (let i = 0; i < nonComboValues1.length; i++) {
+    if (nonComboValues1[i] !== nonComboValues2) {
+      if (cardScores[nonComboValues1[i]] > cardScores[nonComboValues2[i]])
+        return Result.WIN;
+      if (cardScores[nonComboValues1[i]] < cardScores[nonComboValues2[i]])
+        return Result.LOSS;
+    }
+  }
+  return Result.TIE;
 }
 
 // 3.11 => "J"

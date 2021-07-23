@@ -96,10 +96,13 @@ describe("helper functions", () => {
 describe("PokerHand", () => {
   const pair1 = new PokerHand("AC AH 4S 5S 8C");
   const pair2 = new PokerHand("AS AD 4S 5S 8C");
+
   const TOAK = new PokerHand("2C 2H 2S 3C 4H");
-  const betterTOAK = new PokerHand("AC AH AD 4S 5S");
+  const bestTOAK = new PokerHand("AC AH AD KS QH");
+
   const flush = new PokerHand("2C TC 4C 5C 8C");
   const betterFlush = new PokerHand("AC TC 4C 5C 8C");
+
   const fullHouse = new PokerHand("2C 2H 2S 3S 3C");
   const betterfullHouse = new PokerHand("AC AH AS 3S 3C");
 
@@ -146,7 +149,7 @@ describe("PokerHand", () => {
 
     describe("resolves first stage ties", () => {
       it("two TOAKs of different value", () => {
-        expect(TOAK.compareWith(betterTOAK)).toBe(Result.LOSS);
+        expect(TOAK.compareWith(bestTOAK)).toBe(Result.LOSS);
       });
       it("two flushes of different value", () => {
         expect(flush.compareWith(betterFlush)).toBe(Result.LOSS);
@@ -159,10 +162,16 @@ describe("PokerHand", () => {
 
   describe("second stage ties", () => {
     it("resolve TOAK with different Kickers", () => {
-      const TOAK1 = new PokerHand("AC QS KS AC AH");
-      const TOAK2 = new PokerHand("AS 5S 6C AS AD");
+      const worseTOAKByKickers = new PokerHand("2C 2H 2D JS QH");
+      const betterTOAKByKickers = new PokerHand("2C 2H 2D KS QH");
 
-      expect(TOAK1.compareWith(TOAK2)).toBe(Result.WIN);
+      expect(betterTOAKByKickers.compareWith(worseTOAKByKickers)).toBe(
+        Result.WIN
+      );
+      expect(worseTOAKByKickers.compareWith(betterTOAKByKickers)).toBe(
+        Result.LOSS
+      );
+      expect(TOAK.compareWith(TOAK)).toBe(Result.TIE);
     });
   });
 });
