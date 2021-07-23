@@ -122,6 +122,15 @@ describe("PokerHand", () => {
     });
   });
 
+  describe("the comboCards property of a hand", () => {
+    it("comboCards property present", () => {
+      expect(pair1.comboCards).toBeDefined();
+    });
+    it("should be the correct comboCards", () => {
+      expect(pair1.comboCards).toBe("A");
+    });
+  });
+
   describe("The compareWith() function", () => {
     describe("basic comparisons", () => {
       it("ties", () => {

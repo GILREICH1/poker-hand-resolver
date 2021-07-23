@@ -25,6 +25,7 @@ class PokerHand {
     this.cards = cards.split(" ");
     this.score = findCombinationScore(this.cards);
     this.comboName = getCombinationName(this.score);
+    this.comboCards = getComboCards(this.score);
   }
   compareWith(pokerHand = []) {
     const comboScore2 = pokerHand.score;
@@ -62,6 +63,18 @@ class PokerHand {
   }
 }
 
+// 3.11 => "J"
+// TODO make this array in case of TwoPair
+function getComboCards(totalScore) {
+  let integerScore = Math.floor(totalScore);
+  let comboCardScore = totalScore - integerScore;
+  const sanitizedScore = Math.round(comboCardScore * 100) / 100;
+  const comboCards = Object.keys(cardScores).find(
+    (score) => cardScores[score] === sanitizedScore
+  );
+  return comboCards;
+}
+
 function getCombinationName(totalScore) {
   const comboScore = Math.floor(totalScore);
   for (const [comboName, score] of Object.entries(combinationScores)) {
@@ -72,6 +85,7 @@ function getCombinationName(totalScore) {
 }
 
 function findCombinationScore(hand = []) {
+  // TODO have frequencies generated once here
   const sortedValues = extractSortedCardValues(hand);
   const cardSuits = extractCardSuits(hand);
   const highestCard = sortedValues[4];
