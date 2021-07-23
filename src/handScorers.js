@@ -9,8 +9,12 @@ function getThreeOfKindScore(TOAKCard = "") {
 }
 
 // returns value of straight plus score of highest card in case of tie
-function getStraightScore(cardValues = []) {
-  return combinationScores.straight + cardScores[cardValues[4]];
+function getStraightScore(sortedCardValues = []) {
+  return combinationScores.straight + cardScores[sortedCardValues[4]];
 }
 
-module.exports = { getThreeOfKindScore, getStraightScore };
+function getFlushScore(sortedCardValues = []) {
+  return combinationScores.flush + cardScores[sortedCardValues[4]];
+}
+
+module.exports = { getThreeOfKindScore, getStraightScore, getFlushScore };

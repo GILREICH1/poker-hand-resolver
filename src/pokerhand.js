@@ -5,7 +5,11 @@ const {
   extractSortedCardValues,
 } = require("./helpers");
 const { Result, combinationScores, cardScores } = require("./constants");
-const { getThreeOfKindScore, getStraightScore } = require("./handScorers");
+const {
+  getThreeOfKindScore,
+  getStraightScore,
+  getFlushScore,
+} = require("./handScorers");
 const {
   testForStraight,
   testForFourOfAKind,
@@ -91,7 +95,7 @@ function findCombinationScore(hand = []) {
   if (numberOfPairs && TOAKcard) return combinationScores.fullHouse;
 
   // TEST FOR FLUSH
-  if (isFlush) return combinationScores.flush;
+  if (isFlush) return getFlushScore(sortedValues);
 
   // TEST FOR STRAIGHT
   if (isStraight) return getStraightScore(sortedValues);
