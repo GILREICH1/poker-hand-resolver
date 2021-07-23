@@ -127,10 +127,10 @@ describe("PokerHand", () => {
 
   describe("the comboCards property of a hand", () => {
     it("comboCards property present", () => {
-      expect(pair1.comboCardsValues).toBeDefined();
+      expect(pair1.comboCard).toBeDefined();
     });
     it("should be the correct comboCards", () => {
-      expect(pair1.comboCardsValues).toBe("A");
+      expect(pair1.comboCard).toBe("A");
     });
   });
 
@@ -160,8 +160,8 @@ describe("PokerHand", () => {
     });
   });
 
-  describe("second stage ties", () => {
-    it("resolve TOAK with different Kickers", () => {
+  describe.only("second stage ties", () => {
+    it("resolves TOAK with different Kickers", () => {
       const worseTOAKByKickers = new PokerHand("2C 2H 2D JS QH");
       const betterTOAKByKickers = new PokerHand("2C 2H 2D KS QH");
 
@@ -172,6 +172,38 @@ describe("PokerHand", () => {
         Result.LOSS
       );
       expect(TOAK.compareWith(TOAK)).toBe(Result.TIE);
+    });
+
+    it("resolves flush with same highest card", () => {
+      const worseFlushByKickers = new PokerHand("AC 2C 5C TC QC");
+      const betterFlushByKickers = new PokerHand("AC 2C 5C TC KC");
+
+      expect(betterFlushByKickers.compareWith(worseFlushByKickers)).toBe(
+        Result.WIN
+      );
+      expect(worseFlushByKickers.compareWith(betterFlushByKickers)).toBe(
+        Result.LOSS
+      );
+    });
+
+    it("resolves full house with same TOAK", () => {
+      const worseFHByKickers = new PokerHand("2C 2H 2D TS TH");
+      const betterFHByKickers = new PokerHand("2C 2H 2D QS QH");
+
+      expect(betterFHByKickers.compareWith(worseFHByKickers)).toBe(Result.WIN);
+      expect(worseFHByKickers.compareWith(betterFHByKickers)).toBe(Result.LOSS);
+    });
+
+    it("resolves FOAK by kickers", () => {
+      const worseFOAKByKickers = new PokerHand("2C 2H 2D 2S TH");
+      const betterFOAKByKickers = new PokerHand("2C 2H 2D 2S QH");
+
+      expect(betterFOAKByKickers.compareWith(worseFOAKByKickers)).toBe(
+        Result.WIN
+      );
+      expect(worseFOAKByKickers.compareWith(betterFOAKByKickers)).toBe(
+        Result.LOSS
+      );
     });
   });
 });
