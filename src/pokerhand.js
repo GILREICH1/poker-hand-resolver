@@ -21,37 +21,29 @@ class PokerHand {
     this.cards = cards.split(" ");
     this.score = findCombinationScore(this.cards);
     this.comboName = getCombinationName(this.score);
-    this.comboCardsValues = getComboCards(this.score);
+    this.comboCard = getComboCards(this.score);
   }
+
   compareWith(pokerHand = []) {
     const comboScore2 = pokerHand.score;
     if (this.score > comboScore2) return Result.WIN;
     if (this.score < comboScore2) return Result.LOSS;
-
-    // determine the kind of tie
-    // TODO SECOND STAGE TIE RESOLVER
-
-    if (this.comboName === "threeOfAKind")
-      return this.secondStageTieResolver(pokerHand.cards, this.comboName);
-
-    return Result.TIE;
+    return this.secondStageTieResolver(pokerHand.cards);
   }
 
-  secondStageTieResolver(comparisonCards = [], comboName = "pair") {
+  secondStageTieResolver(comparisonCards = []) {
     const thisCardsKickers = extractSortedCardValues(this.cards).filter(
-      (cardValue) => cardValue !== this.comboCardsValues
+      (cardValue) => cardValue !== this.comboCard
     );
     const comparisonCardsKickers = extractSortedCardValues(
       comparisonCards
-    ).filter((cardValue) => cardValue !== this.comboCardsValues);
+    ).filter((cardValue) => cardValue !== this.comboCard);
 
     return kickerResolver(thisCardsKickers, comparisonCardsKickers);
   }
 }
 
 function kickerResolver(nonComboValues1 = [], nonComboValues2 = []) {
-  console.log(nonComboValues1);
-  console.log(nonComboValues2);
   for (let i = 0; i < nonComboValues1.length; i++) {
     if (nonComboValues1[i] !== nonComboValues2) {
       if (cardScores[nonComboValues1[i]] > cardScores[nonComboValues2[i]])
@@ -69,10 +61,10 @@ function getComboCards(totalScore) {
   let integerScore = Math.floor(totalScore);
   let comboCardScore = totalScore - integerScore;
   const sanitizedScore = Math.round(comboCardScore * 100) / 100;
-  const comboCardsValues = Object.keys(cardScores).find(
+  const comboCard = Object.keys(cardScores).find(
     (score) => cardScores[score] === sanitizedScore
   );
-  return comboCardsValues;
+  return comboCard;
 }
 
 function getCombinationName(totalScore) {
