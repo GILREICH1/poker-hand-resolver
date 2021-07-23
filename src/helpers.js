@@ -1,9 +1,9 @@
 const { cardScores } = require("./constants");
 
-function extractFrequencies(arrayOfStrings = []) {
+function extractFrequencies(arrayOfValuesOrSuits = []) {
   const frequencies = {};
 
-  for (const string of arrayOfStrings) {
+  for (const string of arrayOfValuesOrSuits) {
     if (string in frequencies) {
       frequencies[string]++;
     } else {

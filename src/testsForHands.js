@@ -15,6 +15,7 @@ function testForStraight(sortedCardValues = []) {
   return true;
 }
 
+// TODO THESE TAKE FREQUENCIES OBJECTS INSTEAD OF ARRAYS
 function getFOAKCard(cardValues = []) {
   const frequencies = extractFrequencies(cardValues);
   const FOAKCard = findKeyByFrequency(frequencies, 4);
