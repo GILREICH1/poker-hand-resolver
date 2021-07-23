@@ -100,10 +100,7 @@ function findCombinationScore(hand = []) {
   if (TOAKcard) return getThreeOfKindScore(TOAKcard);
 
   // TEST FOR TWO PAIR
-  if (pairsArray.length === 2) return combinationScores.twoPair;
-
-  // TEST FOR A PAIR
-  if (pairsArray.length === 1) return combinationScores.pair;
+  if (pairsArray.length > 0) return getPairScore(pairsArray);
 
   return cardScores[highestCard];
 }
