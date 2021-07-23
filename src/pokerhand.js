@@ -37,17 +37,6 @@ class PokerHand {
     return Result.TIE;
   }
 
-  // kicker issue with: pair, 2 pairs, toak, foak
-  // in case of two identical TOAK hands
-  // table 555A2
-  // hand1 a4
-  // hand2 23
-  // 44446
-  // 25
-  // A7
-  // right now: assumes both are TOAK
-
-  // given 2 hands => give best hand only based on kicker 1 | 0 | -1
   TOAKTieResolver(comparisonCards = [], combo = "threeOfAKind") {
     const scoreOfTOAKCard = this.score - combinationScores[combo];
     const sanitizedScore = Math.round(scoreOfTOAKCard * 100) / 100;

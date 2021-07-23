@@ -1,6 +1,5 @@
 const { cardScores } = require("./constants");
 
-// TODO: move to helpers
 function extractFrequencies(arrayOfStrings = []) {
   const frequencies = {};
 
@@ -14,8 +13,7 @@ function extractFrequencies(arrayOfStrings = []) {
   return frequencies;
 }
 
-// note: don't use below 3
-// TODO: move to helpers
+// returns first key of object that has value of specified frequency
 function findKeyByFrequency(frequencies = {}, frequency = 3) {
   for (const [key, value] of Object.entries(frequencies)) {
     if (value === frequency) {
