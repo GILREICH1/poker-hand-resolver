@@ -23,9 +23,6 @@ class PokerHand {
   }
   compareWith(pokerHand = []) {
     const comboScore2 = pokerHand.score;
-    console.log("combo1", this.score);
-    console.log("combo2", comboScore2);
-
     if (this.score > comboScore2) return Result.WIN;
     if (this.score < comboScore2) return Result.LOSS;
     // determine the kind of tie
