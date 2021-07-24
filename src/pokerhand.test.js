@@ -78,7 +78,7 @@ describe("handScorers functions", () => {
     const FOAKCard = "T";
     expect(getFOAKScore(FOAKCard)).toBe(8.1);
   });
-  it("correctly evaluates pairs scores", () => {
+  it("correctly evaluates pair and two pair scores", () => {
     const pairs = ["T"];
     expect(getPairScore(pairs)).toBe(2.1);
     const twoPair = ["9", "2"];
@@ -98,7 +98,7 @@ describe("PokerHand", () => {
   const pair2 = new PokerHand("AS AD 4S 5S 8C");
 
   const TOAK = new PokerHand("2C 2H 2S 3C 4H");
-  const bestTOAK = new PokerHand("AC AH AD KS QH");
+  const betterTOAK = new PokerHand("AC AH AD KS QH");
 
   const flush = new PokerHand("2C TC 4C 5C 8C");
   const betterFlush = new PokerHand("AC TC 4C 5C 8C");
@@ -143,13 +143,13 @@ describe("PokerHand", () => {
         expect(flush.compareWith(pair1)).toBe(Result.WIN);
       });
       it("loses", () => {
-        expect(TOAK.compareWith(flush)).toBe(Result.LOSS);
+        expect(TOAK.compareWith(fullHouse)).toBe(Result.LOSS);
       });
     });
 
     describe("resolves first stage ties", () => {
       it("two TOAKs of different value", () => {
-        expect(TOAK.compareWith(bestTOAK)).toBe(Result.LOSS);
+        expect(TOAK.compareWith(betterTOAK)).toBe(Result.LOSS);
       });
       it("two flushes of different value", () => {
         expect(flush.compareWith(betterFlush)).toBe(Result.LOSS);
@@ -160,7 +160,7 @@ describe("PokerHand", () => {
     });
   });
 
-  describe.only("second stage ties", () => {
+  describe("second stage ties", () => {
     it("resolves TOAK with different Kickers", () => {
       const worseTOAKByKickers = new PokerHand("2C 2H 2D JS QH");
       const betterTOAKByKickers = new PokerHand("2C 2H 2D KS QH");
@@ -202,6 +202,29 @@ describe("PokerHand", () => {
         Result.WIN
       );
       expect(worseFOAKByKickers.compareWith(betterFOAKByKickers)).toBe(
+        Result.LOSS
+      );
+    });
+
+    it("resolves pairs by kickers", () => {
+      const worsepairByKickers = new PokerHand("AC AH 3S 4S 8C");
+      const betterPairByKickers = new PokerHand("AC AH 3S 4S 6C");
+
+      expect(betterPairByKickers.compareWith(worsepairByKickers)).toBe(
+        Result.WIN
+      );
+      expect(worsepairByKickers.compareWith(betterPairByKickers)).toBe(
+        Result.LOSS
+      );
+    });
+    it("resolves twoPair by kicker", () => {
+      const worseTwoPairByKicker = new PokerHand("AC AH 4S 4S 8C");
+      const betterTwoPairByKicker = new PokerHand("AC AH 4S 4S 6C");
+
+      expect(betterTwoPairByKicker.compareWith(worseTwoPairByKicker)).toBe(
+        Result.WIN
+      );
+      expect(worseTwoPairByKicker.compareWith(betterTwoPairByKicker)).toBe(
         Result.LOSS
       );
     });
