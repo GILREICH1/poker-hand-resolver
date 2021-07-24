@@ -4,7 +4,7 @@ const {
   testForFlush,
   getPairsCards,
   getTOAKCard,
-} = require("./testsForHands");
+} = require("../testsForHands");
 
 describe("testForHands functions", () => {
   it("testForStraight", () => {

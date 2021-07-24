@@ -1,4 +1,4 @@
-const { extractSortedCardValues } = require("./helpers");
+const { extractSortedCardValues } = require("../helpers");
 
 describe("helper functions", () => {
   it("extractSortedCardValues sorts a hand", () => {

@@ -5,7 +5,7 @@ const {
   getFullHouseScore,
   getFOAKScore,
   getPairScore,
-} = require("./handScorers");
+} = require("../handScorers");
 
 describe("handScorers functions", () => {
   it("correctly evaluates a TOAK score", () => {

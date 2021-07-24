@@ -1,5 +1,5 @@
-const { PokerHand } = require("./pokerhand.js");
-const { Result } = require("./constants");
+const { PokerHand } = require("../pokerhand.js");
+const { Result } = require("../constants");
 
 describe("PokerHand", () => {
   const pair1 = new PokerHand("AC AH 4S 5S 8C");
