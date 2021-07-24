@@ -1,4 +1,8 @@
-const { extractCardSuits, extractSortedCardValues } = require("./helpers");
+const {
+  extractCardSuits,
+  extractSortedCardValues,
+  extractFrequencies,
+} = require("./helpers");
 const { Result, combinationScores, cardScores } = require("./constants");
 const {
   getThreeOfKindScore,
@@ -21,7 +25,8 @@ class PokerHand {
     this.cards = cards.split(" ");
     this.score = findCombinationScore(this.cards);
     this.comboName = getCombinationName(this.score);
-    this.comboCard = getComboCards(this.score);
+    // TODO make array for twoPair
+    this.comboCards = getComboCards(this.score);
   }
 
   compareWith(pokerHand = []) {
@@ -33,19 +38,21 @@ class PokerHand {
 
   secondStageTieResolver(comparisonCards = []) {
     const thisCardsKickers = extractSortedCardValues(this.cards).filter(
-      (cardValue) => cardValue !== this.comboCard
+      (cardValue) => !this.comboCards.includes(cardValue)
     );
+
     const comparisonCardsKickers = extractSortedCardValues(
       comparisonCards
-    ).filter((cardValue) => cardValue !== this.comboCard);
+    ).filter((cardValue) => !this.comboCards.includes(cardValue));
 
     return kickerResolver(thisCardsKickers, comparisonCardsKickers);
   }
 }
 
 function kickerResolver(nonComboValues1 = [], nonComboValues2 = []) {
-  for (let i = 0; i < nonComboValues1.length; i++) {
-    if (nonComboValues1[i] !== nonComboValues2) {
+  // iterate from card with highest score to card with lowest score
+  for (let i = nonComboValues1.length - 1; i >= 0; i--) {
+    if (nonComboValues1[i] !== nonComboValues2[i]) {
       if (cardScores[nonComboValues1[i]] > cardScores[nonComboValues2[i]])
         return Result.WIN;
       if (cardScores[nonComboValues1[i]] < cardScores[nonComboValues2[i]])
@@ -55,17 +62,32 @@ function kickerResolver(nonComboValues1 = [], nonComboValues2 = []) {
   return Result.TIE;
 }
 
-// 3.11 => "J"
+// 3.11 => ["J"]
 // TODO make this array in case of TwoPair
-function getComboCards(totalScore) {
+function getComboCards(totalScore, cards) {
   let integerScore = Math.floor(totalScore);
+  if (integerScore === 3) {
+    const cardValues = extractSortedCardValues(cards);
+    return getPairsCards(cardValues);
+  }
+
   let comboCardScore = totalScore - integerScore;
   const sanitizedScore = Math.round(comboCardScore * 100) / 100;
   const comboCard = Object.keys(cardScores).find(
     (score) => cardScores[score] === sanitizedScore
   );
-  return comboCard;
+  return [comboCard];
 }
+
+// function getComboCards(totalScore) {
+//   let integerScore = Math.floor(totalScore);
+//   let comboCardScore = totalScore - integerScore;
+//   const sanitizedScore = Math.round(comboCardScore * 100) / 100;
+//   const comboCard = Object.keys(cardScores).find(
+//     (score) => cardScores[score] === sanitizedScore
+//   );
+//   return comboCard;
+// }
 
 function getCombinationName(totalScore) {
   const comboScore = Math.floor(totalScore);
@@ -95,7 +117,7 @@ function findCombinationScore(hand = []) {
   // TEST FOR FULL HOUSE
   const TOAKcard = getTOAKCard(sortedValues);
   const pairsArray = getPairsCards(sortedValues);
-  if (pairsArray.length !== 0 && TOAKcard) return getFullHouseScore(TOAKcard);
+  if (pairsArray.length === 1 && TOAKcard) return getFullHouseScore(TOAKcard);
 
   // TEST FOR FLUSH
   if (isFlush) return getFlushScore(sortedValues);
