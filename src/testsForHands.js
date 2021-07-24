@@ -35,6 +35,9 @@ function getTOAKCard(cardValues = []) {
   return findKeyByFrequency(frequencies, 3);
 }
 
+// returns array of cards that form pairs
+//  ["2","2","4","7","J"] => ["2"]
+//  ["2","2","4","4","J"] => ["2", "4"]
 function getPairsCards(cardValues = []) {
   const frequencies = extractFrequencies(cardValues);
   const pairCards = [];

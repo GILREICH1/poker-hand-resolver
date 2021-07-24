@@ -38,11 +38,11 @@ function getPairScore(pairsCards = []) {
 
   const sortedPairsCard = pairsCards.sort();
   const highestPairCard = sortedPairsCard[pairsCards.length - 1];
-  const highestPairValue = cardScores[highestPairCard];
+  const highestPairScore = cardScores[highestPairCard];
 
   if (pairsCards.length === 2) {
-    return combinationScores.twoPair + highestPairValue;
-  } else return combinationScores.pair + highestPairValue;
+    return combinationScores.twoPair + highestPairScore;
+  } else return combinationScores.pair + highestPairScore;
 }
 
 module.exports = {

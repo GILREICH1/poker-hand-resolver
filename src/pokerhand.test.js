@@ -127,10 +127,10 @@ describe("PokerHand", () => {
 
   describe("the comboCards property of a hand", () => {
     it("comboCards property present", () => {
-      expect(pair1.comboCard).toBeDefined();
+      expect(pair1.comboCards).toBeDefined();
     });
     it("should be the correct comboCards", () => {
-      expect(pair1.comboCard).toBe("A");
+      expect(pair1.comboCards).toEqual(["A"]);
     });
   });
 
@@ -207,8 +207,8 @@ describe("PokerHand", () => {
     });
 
     it("resolves pairs by kickers", () => {
-      const worsepairByKickers = new PokerHand("AC AH 3S 4S 8C");
-      const betterPairByKickers = new PokerHand("AC AH 3S 4S 6C");
+      const betterPairByKickers = new PokerHand("AC AH 3S 4S 8C");
+      const worsepairByKickers = new PokerHand("AC AH 3S 4S 6C");
 
       expect(betterPairByKickers.compareWith(worsepairByKickers)).toBe(
         Result.WIN
@@ -218,8 +218,8 @@ describe("PokerHand", () => {
       );
     });
     it("resolves twoPair by kicker", () => {
-      const worseTwoPairByKicker = new PokerHand("AC AH 4S 4S 8C");
-      const betterTwoPairByKicker = new PokerHand("AC AH 4S 4S 6C");
+      const worseTwoPairByKicker = new PokerHand("AC AH 4S 4S 6C");
+      const betterTwoPairByKicker = new PokerHand("AC AH 4S 4S 8C");
 
       expect(betterTwoPairByKicker.compareWith(worseTwoPairByKicker)).toBe(
         Result.WIN
