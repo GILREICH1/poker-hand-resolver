@@ -1,8 +1,4 @@
-const {
-  extractCardSuits,
-  extractSortedCardValues,
-  extractFrequencies,
-} = require("./helpers");
+const { extractCardSuits, extractSortedCardValues } = require("./helpers");
 const { Result, combinationScores, cardScores } = require("./constants");
 const {
   getThreeOfKindScore,
@@ -25,7 +21,6 @@ class PokerHand {
     this.cards = cards.split(" ");
     this.score = findCombinationScore(this.cards);
     this.comboName = getCombinationName(this.score);
-    // TODO make array for twoPair
     this.comboCards = getComboCards(this.score);
   }
 
@@ -63,7 +58,6 @@ function kickerResolver(nonComboValues1 = [], nonComboValues2 = []) {
 }
 
 // 3.11 => ["J"]
-// TODO make this array in case of TwoPair
 function getComboCards(totalScore, cards) {
   let integerScore = Math.floor(totalScore);
   if (integerScore === 3) {
