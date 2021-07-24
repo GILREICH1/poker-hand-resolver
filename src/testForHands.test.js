@@ -15,8 +15,16 @@ describe("testForHands functions", () => {
   });
 
   it("getFOAKCard", () => {
-    const FOAK = ["2", "2", "2", "2", "6"];
-    const noFOAK = ["2", "2", "2", "5", "6"];
+    const FOAK = {
+      2: 4,
+      6: 1,
+    };
+    const noFOAK = {
+      2: 3,
+      5: 1,
+      6: 1,
+    };
+
     expect(getFOAKCard(FOAK)).toBe("2");
     expect(getFOAKCard(noFOAK)).toBe("");
   });
@@ -29,19 +37,46 @@ describe("testForHands functions", () => {
   });
 
   it("getTOAKCard", () => {
-    const TOAK = ["2", "2", "2", "3", "6"];
-    const noTOAK = ["2", "2", "3", "5", "6"];
+    const TOAK = {
+      2: 3,
+      3: 1,
+      6: 1,
+    };
+    const noTOAK = {
+      2: 2,
+      5: 1,
+      6: 1,
+      J: 1,
+    };
+
     expect(getTOAKCard(TOAK)).toBe("2");
     expect(getTOAKCard(noTOAK)).toBe("");
   });
 
   it("getPairsCards function", () => {
-    const pair = ["2", "2", "3", "4", "5"];
-    const notPair = ["A", "2", "3", "4", "5"];
-    expect(getPairsCards(pair)).toEqual(["2"]);
-    expect(getPairsCards(notPair)).toEqual([]);
+    const pair = {
+      2: 2,
+      T: 1,
+      3: 1,
+      6: 1,
+    };
+    const noPair = {
+      2: 1,
+      T: 1,
+      5: 1,
+      6: 1,
+      J: 1,
+    };
 
-    const twoPair = ["2", "2", "3", "3", "4", "5"];
-    expect(getPairsCards(twoPair)).toEqual(["2", "3"]);
+    expect(getPairsCards(pair)).toEqual(["2"]);
+    expect(getPairsCards(noPair)).toEqual([]);
+
+    const twoPair = {
+      2: 2,
+      T: 2,
+      6: 1,
+    };
+
+    expect(getPairsCards(twoPair)).toEqual(["2", "T"]);
   });
 });

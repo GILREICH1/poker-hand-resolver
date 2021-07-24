@@ -1,4 +1,8 @@
-const { extractCardSuits, extractSortedCardValues } = require("./helpers");
+const {
+  extractCardSuits,
+  extractSortedCardValues,
+  extractFrequencies,
+} = require("./helpers");
 const { Result, combinationScores, cardScores } = require("./constants");
 const {
   getThreeOfKindScore,
@@ -73,16 +77,6 @@ function getComboCards(totalScore, cards) {
   return [comboCard];
 }
 
-// function getComboCards(totalScore) {
-//   let integerScore = Math.floor(totalScore);
-//   let comboCardScore = totalScore - integerScore;
-//   const sanitizedScore = Math.round(comboCardScore * 100) / 100;
-//   const comboCard = Object.keys(cardScores).find(
-//     (score) => cardScores[score] === sanitizedScore
-//   );
-//   return comboCard;
-// }
-
 function getCombinationName(totalScore) {
   const comboScore = Math.floor(totalScore);
   for (const [comboName, score] of Object.entries(combinationScores)) {
@@ -93,9 +87,10 @@ function getCombinationName(totalScore) {
 }
 
 function findCombinationScore(hand = []) {
-  // TODO have frequencies generated once here
   const sortedValues = extractSortedCardValues(hand);
   const cardSuits = extractCardSuits(hand);
+
+  const valueFrequencies = extractFrequencies(sortedValues);
   const highestCard = sortedValues[4];
 
   // TEST FOR STRAIGHTFLUSH
@@ -105,12 +100,12 @@ function findCombinationScore(hand = []) {
     return combinationScores.straightFlush + cardScores[highestCard];
 
   // TEST FOR FOUR OF A KIND
-  const FOAKCard = getFOAKCard(sortedValues);
+  const FOAKCard = getFOAKCard(valueFrequencies);
   if (FOAKCard) return getFOAKScore(FOAKCard);
 
   // TEST FOR FULL HOUSE
-  const TOAKcard = getTOAKCard(sortedValues);
-  const pairsArray = getPairsCards(sortedValues);
+  const TOAKcard = getTOAKCard(valueFrequencies);
+  const pairsArray = getPairsCards(valueFrequencies);
   if (pairsArray.length === 1 && TOAKcard) return getFullHouseScore(TOAKcard);
 
   // TEST FOR FLUSH
