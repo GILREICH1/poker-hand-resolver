@@ -8,6 +8,12 @@ const {
 } = require("../handScorers");
 
 describe("handScorers functions", () => {
+  it("correctly evaluates pair and two pair scores", () => {
+    const pairs = ["T"];
+    expect(getPairScore(pairs)).toBe(2.1);
+    const twoPair = ["9", "2"];
+    expect(getPairScore(twoPair)).toBe(3.09);
+  });
   it("correctly evaluates a TOAK score", () => {
     const TOAKCard = "T";
     expect(getThreeOfKindScore(TOAKCard)).toBe(4.1);
@@ -27,11 +33,5 @@ describe("handScorers functions", () => {
   it("correctly evaluates a Four of a Kind score", () => {
     const FOAKCard = "T";
     expect(getFOAKScore(FOAKCard)).toBe(8.1);
-  });
-  it("correctly evaluates pair and two pair scores", () => {
-    const pairs = ["T"];
-    expect(getPairScore(pairs)).toBe(2.1);
-    const twoPair = ["9", "2"];
-    expect(getPairScore(twoPair)).toBe(3.09);
   });
 });

@@ -1,5 +1,19 @@
 const { combinationScores, cardScores } = require("./constants");
 
+function getPairScore(pairsCards = []) {
+  if (!pairsCards) {
+    return 0;
+  }
+
+  const sortedPairsCard = pairsCards.sort();
+  const highestPairCard = sortedPairsCard[pairsCards.length - 1];
+  const highestPairScore = cardScores[highestPairCard];
+
+  if (pairsCards.length === 2) {
+    return combinationScores.twoPair + highestPairScore;
+  } else return combinationScores.pair + highestPairScore;
+}
+
 function getThreeOfKindScore(TOAKCard = "") {
   if (!TOAKCard) {
     return 0;
@@ -29,20 +43,6 @@ function getFOAKScore(FOAKCard = "") {
     return 0;
   }
   return combinationScores.fourOfAKind + cardScores[FOAKCard];
-}
-
-function getPairScore(pairsCards = []) {
-  if (!pairsCards) {
-    return 0;
-  }
-
-  const sortedPairsCard = pairsCards.sort();
-  const highestPairCard = sortedPairsCard[pairsCards.length - 1];
-  const highestPairScore = cardScores[highestPairCard];
-
-  if (pairsCards.length === 2) {
-    return combinationScores.twoPair + highestPairScore;
-  } else return combinationScores.pair + highestPairScore;
 }
 
 module.exports = {

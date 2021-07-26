@@ -5,6 +5,8 @@ describe("PokerHand", () => {
   const pair1 = new PokerHand("AC AH 4S 5S 8C");
   const pair2 = new PokerHand("AS AD 4S 5S 8C");
 
+  const twoPair = new PokerHand("AS AD 4S 4S 8C");
+
   const TOAK = new PokerHand("2C 2H 2S 3C 4H");
   const betterTOAK = new PokerHand("AC AH AD KS QH");
 
@@ -40,6 +42,9 @@ describe("PokerHand", () => {
     it("should be the correct comboCards", () => {
       expect(pair1.comboCards).toEqual(["A"]);
     });
+    it("should be the correct comboCards", () => {
+      expect(twoPair.comboCards).toEqual(["4", "A"]);
+    });
   });
 
   describe("The compareWith() function", () => {
@@ -48,7 +53,7 @@ describe("PokerHand", () => {
         expect(pair1.compareWith(pair2)).toBe(Result.TIE);
       });
       it("wins", () => {
-        expect(flush.compareWith(pair1)).toBe(Result.WIN);
+        expect(twoPair.compareWith(pair1)).toBe(Result.WIN);
       });
       it("loses", () => {
         expect(TOAK.compareWith(fullHouse)).toBe(Result.LOSS);

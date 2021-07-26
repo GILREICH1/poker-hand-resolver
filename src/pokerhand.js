@@ -3,7 +3,6 @@ const {
   extractSortedCardValues,
   extractFrequencies,
 } = require("./helpers");
-const { Result, combinationScores, cardScores } = require("./constants");
 const {
   getThreeOfKindScore,
   getStraightScore,
@@ -19,76 +18,29 @@ const {
   getTOAKCard,
   getPairsCards,
 } = require("./testsForHands");
+const { Result, combinationScores, cardScores } = require("./constants");
 
 class PokerHand {
-  constructor(cards) {
+  constructor(cards = "") {
     this.cards = cards.split(" ");
     this.score = findCombinationScore(this.cards);
     this.comboName = getCombinationName(this.score);
-    this.comboCards = getComboCards(this.score);
+    this.comboCards = getComboCards(this.score, this.cards);
   }
 
-  compareWith(pokerHand = []) {
+  compareWith(pokerHand = {}) {
     const comboScore2 = pokerHand.score;
     if (this.score > comboScore2) return Result.WIN;
     if (this.score < comboScore2) return Result.LOSS;
-    return this.secondStageTieResolver(pokerHand.cards);
-  }
-
-  secondStageTieResolver(comparisonCards = []) {
-    const thisCardsKickers = extractSortedCardValues(this.cards).filter(
-      (cardValue) => !this.comboCards.includes(cardValue)
-    );
-
-    const comparisonCardsKickers = extractSortedCardValues(
-      comparisonCards
-    ).filter((cardValue) => !this.comboCards.includes(cardValue));
-
-    return kickerResolver(thisCardsKickers, comparisonCardsKickers);
+    else return secondStageTieResolver(this, pokerHand);
   }
 }
 
-function kickerResolver(nonComboValues1 = [], nonComboValues2 = []) {
-  // iterate from card with highest score to card with lowest score
-  for (let i = nonComboValues1.length - 1; i >= 0; i--) {
-    if (nonComboValues1[i] !== nonComboValues2[i]) {
-      if (cardScores[nonComboValues1[i]] > cardScores[nonComboValues2[i]])
-        return Result.WIN;
-      if (cardScores[nonComboValues1[i]] < cardScores[nonComboValues2[i]])
-        return Result.LOSS;
-    }
-  }
-  return Result.TIE;
-}
-
-// 3.11 => ["J"]
-function getComboCards(totalScore, cards) {
-  let integerScore = Math.floor(totalScore);
-  if (integerScore === 3) {
-    const cardValues = extractSortedCardValues(cards);
-    return getPairsCards(cardValues);
-  }
-
-  let comboCardScore = totalScore - integerScore;
-  const sanitizedScore = Math.round(comboCardScore * 100) / 100;
-  const comboCard = Object.keys(cardScores).find(
-    (score) => cardScores[score] === sanitizedScore
-  );
-  return [comboCard];
-}
-
-function getCombinationName(totalScore) {
-  const comboScore = Math.floor(totalScore);
-  for (const [comboName, score] of Object.entries(combinationScores)) {
-    if (comboScore === score) {
-      return comboName;
-    }
-  }
-}
-
-function findCombinationScore(hand = []) {
-  const sortedValues = extractSortedCardValues(hand);
-  const cardSuits = extractCardSuits(hand);
+// return score of given an array of cards
+// ["JS", "JH", "JC", "2D", "3D"]  => 4.11
+function findCombinationScore(cards = []) {
+  const sortedValues = extractSortedCardValues(cards);
+  const cardSuits = extractCardSuits(cards);
 
   const valueFrequencies = extractFrequencies(sortedValues);
   const highestCard = sortedValues[4];
@@ -121,6 +73,58 @@ function findCombinationScore(hand = []) {
   if (pairsArray.length > 0) return getPairScore(pairsArray);
 
   return cardScores[highestCard];
+}
+
+// resolves the winning hand given two hands with the same score
+function secondStageTieResolver(myPokerHand, comparisonPokerHand) {
+  const thisCardsKickers = extractSortedCardValues(myPokerHand.cards).filter(
+    (cardValue) => !myPokerHand.comboCards.includes(cardValue)
+  );
+
+  const comparisonCardsKickers = extractSortedCardValues(
+    comparisonPokerHand.cards
+  ).filter((cardValue) => !myPokerHand.comboCards.includes(cardValue));
+
+  return kickerResolver(thisCardsKickers, comparisonCardsKickers);
+}
+
+function getCombinationName(totalScore) {
+  const comboScore = Math.floor(totalScore);
+  for (const [comboName, score] of Object.entries(combinationScores)) {
+    if (comboScore === score) {
+      return comboName;
+    }
+  }
+}
+
+// extracts card/s that forms the combo
+// 4.11, ["JS", "JH", "JC", "2D", "3D"] => ["J"]
+function getComboCards(totalScore, cards) {
+  const integerScore = Math.floor(totalScore);
+  if (integerScore === 3) {
+    const cardValues = extractSortedCardValues(cards);
+    const valueFrequencies = extractFrequencies(cardValues);
+    return getPairsCards(valueFrequencies);
+  }
+
+  const comboCardScore = totalScore - integerScore;
+  const sanitizedScore = Math.round(comboCardScore * 100) / 100;
+  const comboCard = Object.keys(cardScores).find(
+    (score) => cardScores[score] === sanitizedScore
+  );
+  return [comboCard];
+}
+
+// resolves the winning hand given an array of kickers
+function kickerResolver(kicker1 = [], kickers2 = []) {
+  // iterate from card with highest score to card with lowest score
+  for (let i = kicker1.length - 1; i >= 0; i--) {
+    if (kicker1[i] !== kickers2[i]) {
+      if (cardScores[kicker1[i]] > cardScores[kickers2[i]]) return Result.WIN;
+      if (cardScores[kicker1[i]] < cardScores[kickers2[i]]) return Result.LOSS;
+    }
+  }
+  return Result.TIE;
 }
 
 module.exports = {
