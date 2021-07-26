@@ -31,7 +31,7 @@ function extractSortedCardValues(hand = []) {
 }
 
 function extractCardSuits(hand = []) {
-  return hand.map((card) => card.substring(1));
+  return hand.map((card) => card.substring(1).toUpperCase());
 }
 
 module.exports = {
