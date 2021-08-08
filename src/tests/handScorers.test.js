@@ -20,7 +20,7 @@ describe("handScorers functions", () => {
   });
   it("correctly evaluates a straight Score", () => {
     const straight = ["2", "3", "4", "5", "6"];
-    expect(getStraightScore(straight)).toBe(5.06);
+    expect(getStraightScore(straight)).toBe(5.03);
   });
   it("correctly evaluates a flush score", () => {
     const flush = ["2", "3", "4", "5", "6"];

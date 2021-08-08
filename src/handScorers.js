@@ -22,9 +22,10 @@ function getThreeOfKindScore(TOAKCard = "") {
   return combinationScores.threeOfAKind + cardScores[TOAKCard];
 }
 
-// returns value of straight plus score of highest card in case of tie
+// returns value of straight plus score of second card in case of tie
+//  second card used due to low ace
 function getStraightScore(sortedCardValues = []) {
-  return combinationScores.straight + cardScores[sortedCardValues[4]];
+  return combinationScores.straight + cardScores[sortedCardValues[1]];
 }
 
 function getFlushScore(sortedCardValues = []) {
