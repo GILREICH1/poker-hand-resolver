@@ -47,5 +47,6 @@ Two scripts are available to run from root.
 - [x] Resolve two different hands (e.g. flush vs straight)
 - [x] Resolve a first stage tie (e.g. a pair of 2s vs a pair of 3s)
 - [x] Resolve second stage ties (e.g. "AC AH 4S 4S 6C" vs "AC AH 4S 4S 8C")
-- [ ] Accept low ace as part of a straight (e.g. "AS 2D 3H 4H 5S") 
+- [x] Accept low ace as part of a straight (e.g. "AS 2D 3H 4H 5S") 
+- [x] A low ace straight loses to higher value straight
 
