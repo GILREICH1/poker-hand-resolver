@@ -2,10 +2,17 @@ const { extractFrequencies, findKeyByFrequency } = require("./helpers");
 const { cardScores } = require("./constants");
 
 function testForStraight(sortedCardValues = []) {
-  for (let i = 0; i < sortedCardValues.length - 1; i++) {
-    const currentCard = sortedCardValues[i];
-    const nextCard = sortedCardValues[i + 1];
-    let scoresDifference = cardScores[nextCard] - cardScores[currentCard];
+  const sortedCardScores = sortedCardValues.map((value) => cardScores[value]);
+  // if chance of a low ace being in play:
+  if (sortedCardValues.includes("A") && sortedCardValues.includes("2")) {
+    sortedCardScores.unshift(0.01);
+    sortedCardScores.pop();
+  }
+
+  for (let i = 0; i < sortedCardScores.length - 1; i++) {
+    const currentCard = sortedCardScores[i];
+    const nextCard = sortedCardScores[i + 1];
+    let scoresDifference = nextCard - currentCard;
     scoresDifference = Math.round(scoresDifference * 100) / 100;
     if (scoresDifference !== 0.01) {
       return false;

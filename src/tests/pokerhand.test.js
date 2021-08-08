@@ -142,4 +142,10 @@ describe("PokerHand", () => {
       );
     });
   });
+  it("straight with low ace", () => {
+    const lowStraight = new PokerHand("AC 2H 3S 4S 5C");
+    const highStraight = new PokerHand("KH QS JS TC 9C");
+
+    expect(lowStraight.compareWith(highStraight)).toBe(Result.LOSS);
+  });
 });
